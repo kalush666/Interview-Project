@@ -3,7 +3,7 @@ import { firebaseAdmin } from "../config/firebase";
 import { Client, CreateClientRequest } from "../types/client.types";
 import { FIRESTORE_COLLECTIONS } from "../constants/database.constants";
 
-export class createClient {
+export class ClientService {
   private dataBase: Firestore = firebaseAdmin.getFirestore();
 
   public async createClient(
