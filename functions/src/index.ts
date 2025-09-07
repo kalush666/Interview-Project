@@ -1,8 +1,8 @@
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
-import { Configuration } from "./constants/configuration.constants";
 import * as functions from "firebase-functions";
+import { Configuration } from "./constants";
 
 const app: express.Application = express();
 

@@ -6,3 +6,6 @@ export const Configuration = {
   },
   DEFAULT_EXPRESS_URL_ENCODED_CONFIG: { extended: true },
 };
+export namespace Auth {
+  export const BEARER_PREFIX = "Bearer ";
+}
