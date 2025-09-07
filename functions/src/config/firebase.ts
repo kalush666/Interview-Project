@@ -1,16 +1,15 @@
-import { initializeApp } from "firebase-admin";
-import { getApps } from "firebase-admin/app";
+import { initializeApp, getApps } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
-import * as FirebaseAdmin from "firebase-admin";
+import { getFirestore } from "firebase-admin/firestore";
 
-class FireBaseAdmin {
-  private static instance: FireBaseAdmin;
+class FirebaseAdmin {
+  private static instance: FirebaseAdmin;
 
-  public static getInstance(): FireBaseAdmin {
-    if (!FireBaseAdmin.instance) {
-      FireBaseAdmin.instance = new FireBaseAdmin();
+  public static getInstance(): FirebaseAdmin {
+    if (!FirebaseAdmin.instance) {
+      FirebaseAdmin.instance = new FirebaseAdmin();
     }
-    return FireBaseAdmin.instance;
+    return FirebaseAdmin.instance;
   }
 
   public initialize(): void {
@@ -19,9 +18,15 @@ class FireBaseAdmin {
     }
   }
 
-  public getAuth(): FirebaseAdmin.auth.Auth {
+  public getAuth() {
     this.initialize();
     return getAuth();
   }
+
+  public getFirestore() {
+    this.initialize();
+    return getFirestore();
+  }
 }
-export const fireBaseAdmin = FireBaseAdmin.getInstance();
+
+export const firebaseAdmin = FirebaseAdmin.getInstance();

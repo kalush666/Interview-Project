@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { AuthRequest } from "../types/auth.types";
 import { Auth, STATUS_MESSAGES } from "../constants";
-import { fireBaseAdmin } from "../config/firebase";
+import { firebaseAdmin } from "../config/firebase";
 import { DecodedIdToken } from "firebase-admin/auth";
 
 export const authMiddleware = async (
@@ -19,7 +19,7 @@ export const authMiddleware = async (
   }
   const token: string = authHeader.split(" ")[Auth.TOKEN_PLACEMENT];
   try {
-    const decodedToken: DecodedIdToken = await fireBaseAdmin
+    const decodedToken: DecodedIdToken = await firebaseAdmin
       .getAuth()
       .verifyIdToken(token);
     req.user = {
