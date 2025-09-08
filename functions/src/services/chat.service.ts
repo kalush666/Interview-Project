@@ -48,7 +48,7 @@ export class ChatService {
       .orderByKey()
       .limitToLast(limit);
     if (dto.startAfter) {
-      query = query.endBefore(dto.startAfter);
+      query = query.endAt(dto.startAfter);
     }
     const snapshot = await query.once("value");
     const messagesData = snapshot.val() || {};
