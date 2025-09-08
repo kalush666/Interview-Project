@@ -18,19 +18,41 @@ export class ClientService {
       ...clientData,
       ownerUid,
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
     await documentReference.set(newClient);
     return newClient;
   }
 
-  public async getClientById(clientId: string): Promise<Client | null> {
-    const doc = await this.dataBase
+  public async getClientsByOwner(ownerUid: string): Promise<Client[]> {
+    const snapshot = await this.dataBase
       .collection(FIRESTORE_COLLECTIONS.CLIENTS)
-      .doc(clientId)
+      .where("ownerUid", "==", ownerUid)
+      .orderBy("createdAt", "desc")
       .get();
-    if (!doc.exists) {
+
+    return snapshot.docs.map((doc) => doc.data() as Client);
+  }
+
+  public async updateClient(
+    clientid: string,
+    updateData: Partial<CreateClientRequest>
+  ): Promise<Client | null> {
+    const clientRef = this.dataBase
+      .collection(FIRESTORE_COLLECTIONS.CLIENTS)
+      .doc(clientid);
+    const clientDoc = await clientRef.get();
+    if (!clientDoc.exists) {
       return null;
     }
-    return doc.data() as Client;
+    const prevData = clientDoc.data() as Client;
+    const updatedClient = {
+      ...prevData,
+      ...updateData,
+      updatedAt: new Date(),
+    };
+    const { id, ...fieldsToUpdate } = updatedClient;
+    await clientRef.update(fieldsToUpdate);
+    return { ...updatedClient } as Client;
   }
 }

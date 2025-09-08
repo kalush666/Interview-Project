@@ -5,6 +5,7 @@ export interface Client {
   email: string;
   ownerUid: string;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface CreateClientRequest {
