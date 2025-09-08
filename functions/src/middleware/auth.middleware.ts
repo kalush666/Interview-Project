@@ -26,10 +26,12 @@ export const authMiddleware = async (
       uid: decodedToken.uid,
       email: decodedToken.email || "",
     };
+    next();
   } catch (error) {
     res.status(STATUS_MESSAGES.HTTP_STATUS.UNAUTHORIZED).json({
       success: false,
       message: STATUS_MESSAGES.ERROR_MESSAGES.UNAUTHORIZED,
     });
+    return;
   }
 };
