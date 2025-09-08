@@ -54,7 +54,7 @@ export class ClientController {
       const dto: GetClientDto = { clientId };
       const client = await this.clientService.getClient(dto);
       if (!client) {
-        res.status(STATUS_MESSAGES.HTTP_STATUS.NO_CONTENT).json({
+        res.status(STATUS_MESSAGES.HTTP_STATUS.NOT_FOUND).json({
           message: STATUS_MESSAGES.ERROR_MESSAGES.NOT_FOUND,
           success: false,
         });

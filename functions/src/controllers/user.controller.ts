@@ -21,7 +21,7 @@ export class UserController {
       const dto: GetUserProfileDto = { uid: userId };
       const userProfile = await this.userService.getUserProfile(dto);
       if (!userProfile) {
-        res.status(STATUS_MESSAGES.HTTP_STATUS.NO_CONTENT).json({
+        res.status(STATUS_MESSAGES.HTTP_STATUS.NOT_FOUND).json({
           success: false,
           error: STATUS_MESSAGES.ERROR_MESSAGES.NOT_FOUND,
         });
