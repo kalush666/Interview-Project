@@ -60,6 +60,13 @@ export class ClientService {
       return null;
     }
     const prevData = clientDoc.data() as Client;
+
+    if (prevData.ownerUid !== dto.ownerUid) {
+      throw new Error(
+        "Unauthorized: Cannot update client owned by another user"
+      );
+    }
+
     const updatedClient = {
       ...prevData,
       name: dto.name || prevData.name,
