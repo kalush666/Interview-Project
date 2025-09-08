@@ -35,7 +35,7 @@ export class ClientController {
   public getClient = async (req: AuthRequest, res: Response): Promise<void> => {
     const clientId = req.params.id;
     try {
-      const client = await this.clientService.getClientById(clientId);
+      const client = await this.clientService.getClient(clientId);
       if (!client) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.NO_CONTENT).json({
           message: STATUS_MESSAGES.ERROR_MESSAGES.NOT_FOUND,

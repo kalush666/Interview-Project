@@ -10,6 +10,9 @@ export const REALTIME_DB_PATHS = {
 
 export const CHAT_CONFIG = {
   DEFAULT_ROOM_ID: "general",
+  DEFAULT_ROOM_NAME: "General Chat",
+  DEFAULT_ROOM_DESCRIPTION: "Default chat room for all users",
+  DEFAULT_ROOM_CREATED_BY: "system",
   MAX_MESSAGE_LENGTH: 1000,
   MAX_MESSAGES_PER_FETCH: 50,
 } as const;

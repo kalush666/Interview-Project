@@ -77,9 +77,9 @@ export class ChatService {
     const docRef = this.db.collection(FIRESTORE_COLLECTIONS.CHAT_ROOMS).doc();
     const room: ChatRoom = {
       id: docRef.id,
-      name: roomData.name,
-      description: roomData.description,
-      createdBy,
+      name: roomData.name || CHAT_CONFIG.DEFAULT_ROOM_NAME,
+      description: roomData.description || CHAT_CONFIG.DEFAULT_ROOM_DESCRIPTION,
+      createdBy: createdBy || CHAT_CONFIG.DEFAULT_ROOM_CREATED_BY,
       createdAt: new Date(),
       participantCount: 0,
     };
@@ -111,9 +111,9 @@ export class ChatService {
         .doc(CHAT_CONFIG.DEFAULT_ROOM_ID)
         .set({
           id: CHAT_CONFIG.DEFAULT_ROOM_ID,
-          name: "General Chat",
-          description: "Default chat room for all users",
-          createdBy: "system",
+          name: CHAT_CONFIG.DEFAULT_ROOM_NAME,
+          description: CHAT_CONFIG.DEFAULT_ROOM_DESCRIPTION,
+          createdBy: CHAT_CONFIG.DEFAULT_ROOM_CREATED_BY,
           createdAt: new Date(),
           participantCount: 0,
         });

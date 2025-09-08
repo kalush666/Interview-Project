@@ -34,6 +34,17 @@ export class ClientService {
     return snapshot.docs.map((doc) => doc.data() as Client);
   }
 
+  public async getClient(clientId: string): Promise<Client | null> {
+    const clientDoc = await this.dataBase
+      .collection(FIRESTORE_COLLECTIONS.CLIENTS)
+      .doc(clientId)
+      .get();
+    if (!clientDoc.exists) {
+      return null;
+    }
+    return clientDoc.data() as Client;
+  }
+
   public async updateClient(
     clientid: string,
     updateData: Partial<CreateClientRequest>
