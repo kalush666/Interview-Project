@@ -2,6 +2,11 @@ import { Response } from "express";
 import { AuthRequest } from "../types/auth.types";
 import { UserService } from "../services/user.service";
 import { STATUS_MESSAGES } from "../constants";
+import {
+  CreateUserProfileDto,
+  UpdateUserProfileDto,
+  GetUserProfileDto,
+} from "../dto";
 
 export class UserController {
   private userService = new UserService();
@@ -12,7 +17,8 @@ export class UserController {
   ): Promise<void> => {
     try {
       const userId = req.user!.uid;
-      const userProfile = await this.userService.getUserProfile(userId);
+      const dto: GetUserProfileDto = { uid: userId };
+      const userProfile = await this.userService.getUserProfile(dto);
       if (!userProfile) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.NO_CONTENT).json({
           success: false,
@@ -38,10 +44,12 @@ export class UserController {
     try {
       const userId = req.user!.uid;
       const { email, displayName } = req.body;
-      const userProfile = await this.userService.createUserProfile(userId, {
+      const dto: CreateUserProfileDto = {
+        uid: userId,
         email,
         displayName,
-      });
+      };
+      const userProfile = await this.userService.createUserProfile(dto);
       res
         .status(STATUS_MESSAGES.HTTP_STATUS.CREATED)
         .json({ success: true, data: userProfile });
@@ -60,9 +68,11 @@ export class UserController {
     try {
       const userId = req.user!.uid;
       const { displayName } = req.body;
-      const updatedProfile = await this.userService.updateUserProfile(userId, {
+      const dto: UpdateUserProfileDto = {
+        uid: userId,
         displayName,
-      });
+      };
+      const updatedProfile = await this.userService.updateUserProfile(dto);
       if (!updatedProfile) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.NO_CONTENT).json({
           success: false,

@@ -2,6 +2,7 @@ import { Response } from "express";
 import { ClientService } from "../services/client.service";
 import { AuthRequest } from "../types/auth.types";
 import { STATUS_MESSAGES } from "../constants";
+import { CreateClientDto, GetClientDto } from "../dto";
 
 export class ClientController {
   private clientService: ClientService = new ClientService();
@@ -13,10 +14,13 @@ export class ClientController {
     const { name, phone, email } = req.body;
     const ownerUid = req.user!.uid;
     try {
-      const client = await this.clientService.createClient(
-        { name, phone, email },
-        ownerUid
-      );
+      const dto: CreateClientDto = {
+        name,
+        phone,
+        email,
+        ownerUid,
+      };
+      const client = await this.clientService.createClient(dto);
 
       res.status(STATUS_MESSAGES.HTTP_STATUS.CREATED).json({
         message: STATUS_MESSAGES.HTTP_STATUS.CREATED,
@@ -35,7 +39,8 @@ export class ClientController {
   public getClient = async (req: AuthRequest, res: Response): Promise<void> => {
     const clientId = req.params.id;
     try {
-      const client = await this.clientService.getClient(clientId);
+      const dto: GetClientDto = { clientId };
+      const client = await this.clientService.getClient(dto);
       if (!client) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.NO_CONTENT).json({
           message: STATUS_MESSAGES.ERROR_MESSAGES.NOT_FOUND,

@@ -4,6 +4,13 @@ import { ChatService } from "../services/chat.service";
 import { UserService } from "../services/user.service";
 import { STATUS_MESSAGES } from "../constants";
 import { CHAT_CONFIG } from "../constants/database.constants";
+import {
+  SendMessageDto,
+  GetMessagesDto,
+  CreateRoomDto,
+  GetRoomDto,
+  GetUserProfileDto,
+} from "../dto";
 
 export class ChatController {
   private chatService = new ChatService();
@@ -17,12 +24,10 @@ export class ChatController {
       const { message } = req.body;
       const userId = req.user!.uid;
       if (!message || message.trim().length === 0) {
-        res
-          .status(STATUS_MESSAGES.HTTP_STATUS.BAD_REQUEST)
-          .json({
-            success: false,
-            error: STATUS_MESSAGES.ERROR_MESSAGES.BAD_REQUEST,
-          });
+        res.status(STATUS_MESSAGES.HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          error: STATUS_MESSAGES.ERROR_MESSAGES.BAD_REQUEST,
+        });
         return;
       }
       if (message.length > CHAT_CONFIG.MAX_MESSAGE_LENGTH) {
@@ -32,28 +37,28 @@ export class ChatController {
         });
         return;
       }
-      const userProfile = await this.userService.getUserProfile(userId);
+      const userProfileDto: GetUserProfileDto = { uid: userId };
+      const userProfile = await this.userService.getUserProfile(userProfileDto);
       const userDisplayName =
         userProfile?.displayName ||
         userProfile?.email ||
         CHAT_CONFIG.DEFAULT_ROOM_CREATED_BY;
-      const chatMessage = await this.chatService.sendMessage(
+      const sendMessageDto: SendMessageDto = {
         userId,
         userDisplayName,
-        { message: message.trim() }
-      );
+        message: message.trim(),
+      };
+      const chatMessage = await this.chatService.sendMessage(sendMessageDto);
       res.status(STATUS_MESSAGES.HTTP_STATUS.CREATED).json({
         success: true,
         data: chatMessage,
         message: "Message sent successfully",
       });
     } catch (error) {
-      res
-        .status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR)
-        .json({
-          success: false,
-          error: STATUS_MESSAGES.ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        });
+      res.status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        error: STATUS_MESSAGES.ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
     }
   };
 
@@ -66,22 +71,21 @@ export class ChatController {
       const messageLimit = limit
         ? parseInt(limit as string)
         : CHAT_CONFIG.MAX_MESSAGES_PER_FETCH;
-      const result = await this.chatService.getMessages(
-        messageLimit,
-        startAfter as string
-      );
+      const getMessagesDto: GetMessagesDto = {
+        limit: messageLimit,
+        startAfter: startAfter as string,
+      };
+      const result = await this.chatService.getMessages(getMessagesDto);
       res.status(STATUS_MESSAGES.HTTP_STATUS.OK).json({
         success: true,
         data: result,
         message: `Found ${result.messages.length} messages`,
       });
     } catch (error) {
-      res
-        .status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR)
-        .json({
-          success: false,
-          error: STATUS_MESSAGES.ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        });
+      res.status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        error: STATUS_MESSAGES.ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
     }
   };
 
@@ -94,12 +98,10 @@ export class ChatController {
         message: `Found ${rooms.length} chat rooms`,
       });
     } catch (error) {
-      res
-        .status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR)
-        .json({
-          success: false,
-          error: STATUS_MESSAGES.ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        });
+      res.status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        error: STATUS_MESSAGES.ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
     }
   };
 
@@ -111,56 +113,51 @@ export class ChatController {
       const { name, description } = req.body;
       const createdBy = req.user!.uid;
       if (!name || name.trim().length === 0) {
-        res
-          .status(STATUS_MESSAGES.HTTP_STATUS.BAD_REQUEST)
-          .json({
-            success: false,
-            error: STATUS_MESSAGES.ERROR_MESSAGES.BAD_REQUEST,
-          });
+        res.status(STATUS_MESSAGES.HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          error: STATUS_MESSAGES.ERROR_MESSAGES.BAD_REQUEST,
+        });
         return;
       }
-      const room = await this.chatService.createRoom(
-        { name: name.trim(), description },
-        createdBy
-      );
+      const createRoomDto: CreateRoomDto = {
+        name: name.trim(),
+        description,
+        createdBy,
+      };
+      const room = await this.chatService.createRoom(createRoomDto);
       res.status(STATUS_MESSAGES.HTTP_STATUS.CREATED).json({
         success: true,
         data: room,
         message: "Chat room created successfully",
       });
     } catch (error) {
-      res
-        .status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR)
-        .json({
-          success: false,
-          error: STATUS_MESSAGES.ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        });
+      res.status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        error: STATUS_MESSAGES.ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
     }
   };
 
   public getRoom = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const { roomId } = req.params;
-      const room = await this.chatService.getRoom(roomId);
+      const getRoomDto: GetRoomDto = { roomId };
+      const room = await this.chatService.getRoom(getRoomDto);
       if (!room) {
-        res
-          .status(STATUS_MESSAGES.HTTP_STATUS.NO_CONTENT)
-          .json({
-            success: false,
-            error: STATUS_MESSAGES.ERROR_MESSAGES.NOT_FOUND,
-          });
+        res.status(STATUS_MESSAGES.HTTP_STATUS.NO_CONTENT).json({
+          success: false,
+          error: STATUS_MESSAGES.ERROR_MESSAGES.NOT_FOUND,
+        });
         return;
       }
       res
         .status(STATUS_MESSAGES.HTTP_STATUS.OK)
         .json({ success: true, data: room });
     } catch (error) {
-      res
-        .status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR)
-        .json({
-          success: false,
-          error: STATUS_MESSAGES.ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
-        });
+      res.status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        error: STATUS_MESSAGES.ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+      });
     }
   };
 }

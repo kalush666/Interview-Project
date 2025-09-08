@@ -2,8 +2,6 @@ import { firebaseAdmin } from "../config/firebase";
 import {
   ChatMessage,
   ChatRoom,
-  SendMessageRequest,
-  CreateRoomRequest,
   ChatMessagesResponse,
 } from "../types/chat.types";
 import {
@@ -11,46 +9,46 @@ import {
   REALTIME_DB_PATHS,
   CHAT_CONFIG,
 } from "../constants/database.constants";
+import {
+  SendMessageDto,
+  GetMessagesDto,
+  CreateRoomDto,
+  GetRoomDto,
+} from "../dto";
 
 export class ChatService {
   private db = firebaseAdmin.getFirestore();
   private rtdb = firebaseAdmin.getRealtimeDatabase();
 
-  public async sendMessage(
-    userId: string,
-    userDisplayName: string,
-    messageData: SendMessageRequest
-  ): Promise<ChatMessage> {
+  public async sendMessage(dto: SendMessageDto): Promise<ChatMessage> {
     const messageRef = this.rtdb.ref(REALTIME_DB_PATHS.MESSAGES).push();
     const messageId = messageRef.key!;
     const message: ChatMessage = {
       id: messageId,
-      userId,
-      userDisplayName,
-      message: messageData.message,
+      userId: dto.userId,
+      userDisplayName: dto.userDisplayName,
+      message: dto.message,
       timestamp: Date.now(),
       createdAt: new Date(),
     };
     await messageRef.set({
       id: messageId,
-      userId,
-      userDisplayName,
-      message: messageData.message,
+      userId: dto.userId,
+      userDisplayName: dto.userDisplayName,
+      message: dto.message,
       timestamp: message.timestamp,
     });
     return message;
   }
 
-  public async getMessages(
-    limit: number = CHAT_CONFIG.MAX_MESSAGES_PER_FETCH,
-    startAfter?: string
-  ): Promise<ChatMessagesResponse> {
+  public async getMessages(dto: GetMessagesDto): Promise<ChatMessagesResponse> {
+    const limit = dto.limit || CHAT_CONFIG.MAX_MESSAGES_PER_FETCH;
     let query = this.rtdb
       .ref(REALTIME_DB_PATHS.MESSAGES)
       .orderByKey()
       .limitToLast(limit);
-    if (startAfter) {
-      query = query.endBefore(startAfter);
+    if (dto.startAfter) {
+      query = query.endBefore(dto.startAfter);
     }
     const snapshot = await query.once("value");
     const messagesData = snapshot.val() || {};
@@ -70,16 +68,13 @@ export class ChatService {
     };
   }
 
-  public async createRoom(
-    roomData: CreateRoomRequest,
-    createdBy: string
-  ): Promise<ChatRoom> {
+  public async createRoom(dto: CreateRoomDto): Promise<ChatRoom> {
     const docRef = this.db.collection(FIRESTORE_COLLECTIONS.CHAT_ROOMS).doc();
     const room: ChatRoom = {
       id: docRef.id,
-      name: roomData.name || CHAT_CONFIG.DEFAULT_ROOM_NAME,
-      description: roomData.description || CHAT_CONFIG.DEFAULT_ROOM_DESCRIPTION,
-      createdBy: createdBy || CHAT_CONFIG.DEFAULT_ROOM_CREATED_BY,
+      name: dto.name || CHAT_CONFIG.DEFAULT_ROOM_NAME,
+      description: dto.description || CHAT_CONFIG.DEFAULT_ROOM_DESCRIPTION,
+      createdBy: dto.createdBy || CHAT_CONFIG.DEFAULT_ROOM_CREATED_BY,
       createdAt: new Date(),
       participantCount: 0,
     };
@@ -95,16 +90,18 @@ export class ChatService {
     return snapshot.docs.map((doc) => doc.data() as ChatRoom);
   }
 
-  public async getRoom(roomId: string): Promise<ChatRoom | null> {
+  public async getRoom(dto: GetRoomDto): Promise<ChatRoom | null> {
     const doc = await this.db
       .collection(FIRESTORE_COLLECTIONS.CHAT_ROOMS)
-      .doc(roomId)
+      .doc(dto.roomId)
       .get();
     return doc.exists ? (doc.data() as ChatRoom) : null;
   }
 
   public async initializeDefaultRoom(): Promise<void> {
-    const defaultRoom = await this.getRoom(CHAT_CONFIG.DEFAULT_ROOM_ID);
+    const defaultRoom = await this.getRoom({
+      roomId: CHAT_CONFIG.DEFAULT_ROOM_ID,
+    });
     if (!defaultRoom) {
       await this.db
         .collection(FIRESTORE_COLLECTIONS.CHAT_ROOMS)

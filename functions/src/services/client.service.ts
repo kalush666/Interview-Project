@@ -1,22 +1,28 @@
 import { Firestore } from "firebase-admin/firestore";
 import { firebaseAdmin } from "../config/firebase";
-import { Client, CreateClientRequest } from "../types/client.types";
+import { Client } from "../types/client.types";
 import { FIRESTORE_COLLECTIONS } from "../constants/database.constants";
+import {
+  CreateClientDto,
+  UpdateClientDto,
+  GetClientDto,
+  GetClientsByOwnerDto,
+  DeleteClientDto,
+} from "../dto";
 
 export class ClientService {
   private dataBase: Firestore = firebaseAdmin.getFirestore();
 
-  public async createClient(
-    clientData: CreateClientRequest,
-    ownerUid: string
-  ): Promise<Client> {
+  public async createClient(dto: CreateClientDto): Promise<Client> {
     const documentReference = this.dataBase
       .collection(FIRESTORE_COLLECTIONS.CLIENTS)
       .doc();
     const newClient: Client = {
       id: documentReference.id,
-      ...clientData,
-      ownerUid,
+      name: dto.name,
+      email: dto.email,
+      phone: dto.phone,
+      ownerUid: dto.ownerUid,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -24,20 +30,20 @@ export class ClientService {
     return newClient;
   }
 
-  public async getClientsByOwner(ownerUid: string): Promise<Client[]> {
+  public async getClientsByOwner(dto: GetClientsByOwnerDto): Promise<Client[]> {
     const snapshot = await this.dataBase
       .collection(FIRESTORE_COLLECTIONS.CLIENTS)
-      .where("ownerUid", "==", ownerUid)
+      .where("ownerUid", "==", dto.ownerUid)
       .orderBy("createdAt", "desc")
       .get();
 
     return snapshot.docs.map((doc) => doc.data() as Client);
   }
 
-  public async getClient(clientId: string): Promise<Client | null> {
+  public async getClient(dto: GetClientDto): Promise<Client | null> {
     const clientDoc = await this.dataBase
       .collection(FIRESTORE_COLLECTIONS.CLIENTS)
-      .doc(clientId)
+      .doc(dto.clientId)
       .get();
     if (!clientDoc.exists) {
       return null;
@@ -45,13 +51,10 @@ export class ClientService {
     return clientDoc.data() as Client;
   }
 
-  public async updateClient(
-    clientid: string,
-    updateData: Partial<CreateClientRequest>
-  ): Promise<Client | null> {
+  public async updateClient(dto: UpdateClientDto): Promise<Client | null> {
     const clientRef = this.dataBase
       .collection(FIRESTORE_COLLECTIONS.CLIENTS)
-      .doc(clientid);
+      .doc(dto.clientId);
     const clientDoc = await clientRef.get();
     if (!clientDoc.exists) {
       return null;
@@ -59,11 +62,29 @@ export class ClientService {
     const prevData = clientDoc.data() as Client;
     const updatedClient = {
       ...prevData,
-      ...updateData,
+      name: dto.name || prevData.name,
+      email: dto.email || prevData.email,
+      phone: dto.phone || prevData.phone,
       updatedAt: new Date(),
     };
     const { id, ...fieldsToUpdate } = updatedClient;
     await clientRef.update(fieldsToUpdate);
     return { ...updatedClient } as Client;
+  }
+
+  public async deleteClient(dto: DeleteClientDto): Promise<boolean> {
+    const clientRef = this.dataBase
+      .collection(FIRESTORE_COLLECTIONS.CLIENTS)
+      .doc(dto.clientId);
+    const clientDoc = await clientRef.get();
+    if (!clientDoc.exists) {
+      return false;
+    }
+    const clientData = clientDoc.data() as Client;
+    if (clientData.ownerUid !== dto.ownerUid) {
+      return false;
+    }
+    await clientRef.delete();
+    return true;
   }
 }
