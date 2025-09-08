@@ -1,5 +1,6 @@
 import { initializeApp, getApps } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
+import { getDatabase } from "firebase-admin/database";
 import { getFirestore } from "firebase-admin/firestore";
 
 class FirebaseAdmin {
@@ -26,6 +27,11 @@ class FirebaseAdmin {
   public getFirestore() {
     this.initialize();
     return getFirestore();
+  }
+
+  public getRealtimeDatabase() {
+    this.initialize();
+    return getDatabase();
   }
 }
 

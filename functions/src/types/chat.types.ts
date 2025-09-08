@@ -1,7 +1,5 @@
-// Chat message structure (Realtime Database)
 export interface ChatMessage {
   id: string;
-  roomId: string;
   userId: string;
   userDisplayName: string;
   message: string;
