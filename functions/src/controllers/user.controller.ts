@@ -2,6 +2,7 @@ import { Response } from "express";
 import { AuthRequest } from "../types/auth.types";
 import { UserService } from "../services/user.service";
 import { STATUS_MESSAGES } from "../constants";
+import { ValidationUtils } from "../utils/validation.util";
 import {
   CreateUserProfileDto,
   UpdateUserProfileDto,
@@ -44,11 +45,23 @@ export class UserController {
     try {
       const userId = req.user!.uid;
       const { email, displayName } = req.body;
-      const dto: CreateUserProfileDto = {
+      
+      if (!email || !ValidationUtils.isValidEmail(email)) {
+        res.status(STATUS_MESSAGES.HTTP_STATUS.BAD_REQUEST).json({
+          success: false,
+          error: "Valid email is required",
+        });
+        return;
+      }
+      
+      const sanitizedDisplayName = ValidationUtils.sanitizeString(displayName);
+      
+      const dto: CreateUserProfileDto = ValidationUtils.removeUndefinedFields({
         uid: userId,
-        email,
-        displayName,
-      };
+        email: email.trim(),
+        displayName: sanitizedDisplayName,
+      }) as CreateUserProfileDto;
+      
       const userProfile = await this.userService.createUserProfile(dto);
       res
         .status(STATUS_MESSAGES.HTTP_STATUS.CREATED)
@@ -68,13 +81,17 @@ export class UserController {
     try {
       const userId = req.user!.uid;
       const { displayName } = req.body;
-      const dto: UpdateUserProfileDto = {
+      
+      const sanitizedDisplayName = ValidationUtils.sanitizeString(displayName);
+      
+      const dto: UpdateUserProfileDto = ValidationUtils.removeUndefinedFields({
         uid: userId,
-        displayName,
-      };
+        displayName: sanitizedDisplayName,
+      }) as UpdateUserProfileDto;
+      
       const updatedProfile = await this.userService.updateUserProfile(dto);
       if (!updatedProfile) {
-        res.status(STATUS_MESSAGES.HTTP_STATUS.NO_CONTENT).json({
+        res.status(STATUS_MESSAGES.HTTP_STATUS.NOT_FOUND).json({
           success: false,
           error: STATUS_MESSAGES.ERROR_MESSAGES.NOT_FOUND,
         });

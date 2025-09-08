@@ -11,6 +11,7 @@ import {
   GetRoomDto,
   GetUserProfileDto,
 } from "../dto";
+import { ValidationUtils } from "../utils/validation.util";
 
 export class ChatController {
   private chatService = new ChatService();
@@ -23,14 +24,17 @@ export class ChatController {
     try {
       const { message } = req.body;
       const userId = req.user!.uid;
-      if (!message || message.trim().length === 0) {
+      
+      const sanitizedMessage = ValidationUtils.sanitizeString(message);
+      
+      if (!sanitizedMessage || sanitizedMessage.trim().length === 0) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.BAD_REQUEST).json({
           success: false,
           error: STATUS_MESSAGES.ERROR_MESSAGES.BAD_REQUEST,
         });
         return;
       }
-      if (message.length > CHAT_CONFIG.MAX_MESSAGE_LENGTH) {
+      if (sanitizedMessage.length > CHAT_CONFIG.MAX_MESSAGE_LENGTH) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.BAD_REQUEST).json({
           success: false,
           error: `Message too long. Maximum ${CHAT_CONFIG.MAX_MESSAGE_LENGTH} characters.`,
@@ -43,11 +47,11 @@ export class ChatController {
         userProfile?.displayName ||
         userProfile?.email ||
         CHAT_CONFIG.DEFAULT_ROOM_CREATED_BY;
-      const sendMessageDto: SendMessageDto = {
+      const sendMessageDto: SendMessageDto = ValidationUtils.removeUndefinedFields({
         userId,
         userDisplayName,
-        message: message.trim(),
-      };
+        message: sanitizedMessage.trim(),
+      }) as SendMessageDto;
       const chatMessage = await this.chatService.sendMessage(sendMessageDto);
       res.status(STATUS_MESSAGES.HTTP_STATUS.CREATED).json({
         success: true,
@@ -112,18 +116,22 @@ export class ChatController {
     try {
       const { name, description } = req.body;
       const createdBy = req.user!.uid;
-      if (!name || name.trim().length === 0) {
+      
+      const sanitizedName = ValidationUtils.sanitizeString(name);
+      const sanitizedDescription = ValidationUtils.sanitizeString(description);
+      
+      if (!sanitizedName || sanitizedName.trim().length === 0) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.BAD_REQUEST).json({
           success: false,
           error: STATUS_MESSAGES.ERROR_MESSAGES.BAD_REQUEST,
         });
         return;
       }
-      const createRoomDto: CreateRoomDto = {
-        name: name.trim(),
-        description,
+      const createRoomDto: CreateRoomDto = ValidationUtils.removeUndefinedFields({
+        name: sanitizedName.trim(),
+        description: sanitizedDescription,
         createdBy,
-      };
+      }) as CreateRoomDto;
       const room = await this.chatService.createRoom(createRoomDto);
       res.status(STATUS_MESSAGES.HTTP_STATUS.CREATED).json({
         success: true,
