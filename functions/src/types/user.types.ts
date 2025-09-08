@@ -2,7 +2,6 @@ export interface UserProfile {
   uid: string;
   email: string;
   displayName?: string;
-  photoURL?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,5 +13,4 @@ export interface CreateUserRequest {
 
 export interface UpdateUserRequest {
   displayName?: string;
-  photoURL?: string;
 }
