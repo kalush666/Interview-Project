@@ -61,6 +61,19 @@ export const UI_TEXT = {
   MESSAGES_COUNT: (count: number) => `${count} messages`,
   MESSAGE_PLACEHOLDER: "Type your message...",
   SEND_BUTTON_TEXT: "Send",
+  LOGIN_TITLE: "Login",
+  LOGIN_BUTTON_TEXT: "Login",
+  REGISTER_TITLE: "Register",
+  REGISTER_BUTTON_TEXT: "Register",
+  EMAIL_PLACEHOLDER: "Email",
+  PASSWORD_PLACEHOLDER: "Password",
+  NO_ACCOUNT_TEXT: "Don't have an account?",
+  HAVE_ACCOUNT_TEXT: "Already have an account?",
+  LOGOUT_BUTTON_TEXT: "Logout",
+  CHAT_PAGE_TITLE: "Chat Room",
+  DASHBOARD_PAGE_TITLE: "Dashboard",
+  CLIENTS_PAGE_TITLE: "Clients",
+  LOADING_TEXT: "Loading...",
 } as const;
 
 export const CSS_CLASSES = {
@@ -79,6 +92,21 @@ export const CSS_CLASSES = {
   MESSAGE_INPUT_FORM: "message-input-form",
   MESSAGE_INPUT: "message-input",
   SEND_BUTTON: "send-button",
+  LOGIN_FORM: "login-form",
+  AUTH_ERROR: "error",
+  AUTH_FORM: "auth-form",
+  AUTH_INPUT: "auth-input",
+  AUTH_BUTTON: "auth-button",
+  AUTH_LINK: "auth-link",
+  APP: "app",
+  LOADING: "loading",
+  CHAT_PAGE: "chat-page",
+  PAGE_HEADER: "page-header",
+  PAGE_MAIN: "page-main",
+  LOGOUT_BUTTON: "logout-btn",
+  DASHBOARD_PAGE: "dashboard-page",
+  CLIENTS_PAGE: "clients-page",
+  AUTH_PAGE: "auth-page",
 } as const;
 
 export const SCROLL_BEHAVIOR = {

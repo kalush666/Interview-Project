@@ -1,10 +1,10 @@
 export const API_BASE_URL =
-  process.env.NODE_ENV === "development"
+  import.meta.env.VITE_NODE_ENV === "development"
     ? `http://localhost:5001/${
-        process.env.REACT_APP_FIREBASE_PROJECT_ID || "interview-project-c4b60"
+        import.meta.env.VITE_FIREBASE_PROJECT_ID || "demo-project"
       }/us-central1/api`
     : `https://us-central1-${
-        process.env.REACT_APP_FIREBASE_PROJECT_ID || "interview-project-c4b60"
+        import.meta.env.VITE_FIREBASE_PROJECT_ID || "interview-project-c4b60"
       }.cloudfunctions.net/api`;
 
 export const API_ENDPOINTS = {

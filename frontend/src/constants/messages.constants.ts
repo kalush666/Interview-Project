@@ -37,4 +37,6 @@ export const LOADING_MESSAGES = {
   SENDING_MESSAGE: "Sending message...",
   SAVING_CHANGES: "Saving changes...",
   PROCESSING: "Processing...",
+  LOGGING_IN: "Logging in...",
+  REGISTERING: "Registering...",
 } as const;

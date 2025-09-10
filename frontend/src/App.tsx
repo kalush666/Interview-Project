@@ -1,35 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { useAuth } from "./hooks/useAuth.hook";
+import { AuthPage } from "./pages/AuthPage";
+import { DashboardPage } from "./pages/DashboardPage";
+import { ChatPage } from "./pages/ChatPage";
+import { ClientsPage } from "./pages/ClientsPage";
+import { ROUTES } from "./constants/api.constants";
+import { CSS_CLASSES, UI_TEXT } from "./constants";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: React.FC = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div className={CSS_CLASSES.LOADING}>{UI_TEXT.LOADING_TEXT}</div>;
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      <div className={CSS_CLASSES.APP}>
+        <Routes>
+          {/* Public routes */}
+          <Route
+            path={ROUTES.LOGIN}
+            element={user ? <Navigate to={ROUTES.DASHBOARD} /> : <AuthPage />}
+          />
 
-export default App
+          {/* Protected routes */}
+          <Route
+            path={ROUTES.DASHBOARD}
+            element={user ? <DashboardPage /> : <Navigate to={ROUTES.LOGIN} />}
+          />
+          <Route
+            path={ROUTES.CHAT}
+            element={user ? <ChatPage /> : <Navigate to={ROUTES.LOGIN} />}
+          />
+          <Route
+            path={ROUTES.CLIENTS}
+            element={user ? <ClientsPage /> : <Navigate to={ROUTES.LOGIN} />}
+          />
+
+          {/* Default redirect */}
+          <Route
+            path={ROUTES.HOME}
+            element={<Navigate to={user ? ROUTES.DASHBOARD : ROUTES.LOGIN} />}
+          />
+        </Routes>
+      </div>
+    </Router>
+  );
+};
+
+export default App;

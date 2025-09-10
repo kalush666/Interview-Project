@@ -4,6 +4,7 @@ import {
   CSS_CLASSES,
   UI_TEXT,
   LOADING_MESSAGES,
+  ERROR_MESSAGES,
 } from "../../../constants";
 
 interface MessageInputProps {
@@ -26,7 +27,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
       await onSendMessage(message.trim());
       setMessage("");
     } catch (error) {
-      console.error("Failed to send message:", error);
+      console.error(ERROR_MESSAGES.FAILED_TO_SEND_MESSAGE, error);
     } finally {
       setSending(false);
     }
