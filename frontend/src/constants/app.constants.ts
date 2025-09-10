@@ -4,22 +4,6 @@ export const APP_CONFIG = {
   DESCRIPTION: "Firebase Functions Backend with React Frontend",
 } as const;
 
-export const ROUTES = {
-  HOME: "/",
-  LOGIN: "/login",
-  DASHBOARD: "/dashboard",
-  CHAT: "/chat",
-  CLIENTS: "/clients",
-  PROFILE: "/profile",
-} as const;
-
-export const API_ENDPOINTS = {
-  BASE_URL: process.env.REACT_APP_API_BASE_URL || "http://localhost:5001",
-  USERS: "/users",
-  CLIENTS: "/clients",
-  CHAT: "/chat",
-} as const;
-
 export const HTTP_STATUS = {
   OK: 200,
   CREATED: 201,
