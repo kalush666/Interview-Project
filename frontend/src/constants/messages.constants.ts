@@ -8,6 +8,12 @@ export const ERROR_MESSAGES = {
   INTERNAL_SERVER_ERROR: "Internal server error",
   VALIDATION_ERROR: "Validation error",
   FORM_SUBMISSION_ERROR: "Form submission failed",
+  FAILED_TO_SEND_MESSAGE: "Failed to send message",
+  FAILED_TO_GET_MESSAGES: "Failed to get messages",
+  LOGIN_FAILED: "Login failed",
+  REGISTRATION_FAILED: "Registration failed",
+  LOGOUT_FAILED: "Logout failed",
+  TOKEN_RETRIEVAL_FAILED: "Failed to retrieve authentication token",
 } as const;
 
 export const SUCCESS_MESSAGES = {
