@@ -24,9 +24,9 @@ export class ChatController {
     try {
       const { message } = req.body;
       const userId = req.user!.uid;
-      
+
       const sanitizedMessage = ValidationUtils.sanitizeString(message);
-      
+
       if (!sanitizedMessage || sanitizedMessage.trim().length === 0) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.BAD_REQUEST).json({
           success: false,
@@ -47,11 +47,12 @@ export class ChatController {
         userProfile?.displayName ||
         userProfile?.email ||
         CHAT_CONFIG.DEFAULT_ROOM_CREATED_BY;
-      const sendMessageDto: SendMessageDto = ValidationUtils.removeUndefinedFields({
-        userId,
-        userDisplayName,
-        message: sanitizedMessage.trim(),
-      }) as SendMessageDto;
+      const sendMessageDto: SendMessageDto =
+        ValidationUtils.removeUndefinedFields({
+          userId,
+          userDisplayName,
+          message: sanitizedMessage.trim(),
+        }) as SendMessageDto;
       const chatMessage = await this.chatService.sendMessage(sendMessageDto);
       res.status(STATUS_MESSAGES.HTTP_STATUS.CREATED).json({
         success: true,
@@ -116,10 +117,10 @@ export class ChatController {
     try {
       const { name, description } = req.body;
       const createdBy = req.user!.uid;
-      
+
       const sanitizedName = ValidationUtils.sanitizeString(name);
       const sanitizedDescription = ValidationUtils.sanitizeString(description);
-      
+
       if (!sanitizedName || sanitizedName.trim().length === 0) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.BAD_REQUEST).json({
           success: false,
@@ -127,11 +128,12 @@ export class ChatController {
         });
         return;
       }
-      const createRoomDto: CreateRoomDto = ValidationUtils.removeUndefinedFields({
-        name: sanitizedName.trim(),
-        description: sanitizedDescription,
-        createdBy,
-      }) as CreateRoomDto;
+      const createRoomDto: CreateRoomDto =
+        ValidationUtils.removeUndefinedFields({
+          name: sanitizedName.trim(),
+          description: sanitizedDescription,
+          createdBy,
+        }) as CreateRoomDto;
       const room = await this.chatService.createRoom(createRoomDto);
       res.status(STATUS_MESSAGES.HTTP_STATUS.CREATED).json({
         success: true,

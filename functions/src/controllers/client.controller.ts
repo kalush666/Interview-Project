@@ -24,14 +24,14 @@ export class ClientController {
       const sanitizedName = ValidationUtils.sanitizeString(name);
       const sanitizedPhone = ValidationUtils.sanitizeString(phone);
       const sanitizedEmail = ValidationUtils.sanitizeString(email);
-      
+
       const dto: CreateClientDto = ValidationUtils.removeUndefinedFields({
         name: sanitizedName,
         phone: sanitizedPhone,
         email: sanitizedEmail,
         ownerUid,
       }) as CreateClientDto;
-      
+
       const client = await this.clientService.createClient(dto);
 
       res.status(STATUS_MESSAGES.HTTP_STATUS.CREATED).json({
@@ -107,7 +107,7 @@ export class ClientController {
       const sanitizedName = ValidationUtils.sanitizeString(name);
       const sanitizedPhone = ValidationUtils.sanitizeString(phone);
       const sanitizedEmail = ValidationUtils.sanitizeString(email);
-      
+
       const dto: UpdateClientDto = ValidationUtils.removeUndefinedFields({
         clientId,
         ownerUid,
@@ -115,7 +115,7 @@ export class ClientController {
         phone: sanitizedPhone,
         email: sanitizedEmail,
       }) as UpdateClientDto;
-      
+
       const updatedClient = await this.clientService.updateClient(dto);
       if (!updatedClient) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.NOT_FOUND).json({

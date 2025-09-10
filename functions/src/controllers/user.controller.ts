@@ -45,7 +45,7 @@ export class UserController {
     try {
       const userId = req.user!.uid;
       const { email, displayName } = req.body;
-      
+
       if (!email || !ValidationUtils.isValidEmail(email)) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.BAD_REQUEST).json({
           success: false,
@@ -53,15 +53,15 @@ export class UserController {
         });
         return;
       }
-      
+
       const sanitizedDisplayName = ValidationUtils.sanitizeString(displayName);
-      
+
       const dto: CreateUserProfileDto = ValidationUtils.removeUndefinedFields({
         uid: userId,
         email: email.trim(),
         displayName: sanitizedDisplayName,
       }) as CreateUserProfileDto;
-      
+
       const userProfile = await this.userService.createUserProfile(dto);
       res
         .status(STATUS_MESSAGES.HTTP_STATUS.CREATED)
@@ -81,14 +81,14 @@ export class UserController {
     try {
       const userId = req.user!.uid;
       const { displayName } = req.body;
-      
+
       const sanitizedDisplayName = ValidationUtils.sanitizeString(displayName);
-      
+
       const dto: UpdateUserProfileDto = ValidationUtils.removeUndefinedFields({
         uid: userId,
         displayName: sanitizedDisplayName,
       }) as UpdateUserProfileDto;
-      
+
       const updatedProfile = await this.userService.updateUserProfile(dto);
       if (!updatedProfile) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.NOT_FOUND).json({
