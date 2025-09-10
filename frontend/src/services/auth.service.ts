@@ -2,6 +2,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import type { User } from "firebase/auth";
 import { auth } from "../config/firebase.database";
@@ -17,13 +18,24 @@ export class AuthService {
     }
   }
 
-  public static async register(email: string, password: string): Promise<User> {
+  public static async register(
+    email: string,
+    password: string,
+    displayName?: string
+  ): Promise<User> {
     try {
       const result = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
+
+      if (displayName && result.user) {
+        await updateProfile(result.user, {
+          displayName: displayName,
+        });
+      }
+
       return result.user;
     } catch (error) {
       throw new Error(ERROR_MESSAGES.REGISTRATION_FAILED);

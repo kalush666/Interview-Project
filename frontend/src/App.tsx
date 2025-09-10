@@ -30,6 +30,10 @@ const App: React.FC = () => {
             path={ROUTES.LOGIN}
             element={user ? <Navigate to={ROUTES.DASHBOARD} /> : <AuthPage />}
           />
+          <Route
+            path={ROUTES.REGISTER}
+            element={user ? <Navigate to={ROUTES.DASHBOARD} /> : <AuthPage />}
+          />
 
           {/* Protected routes */}
           <Route

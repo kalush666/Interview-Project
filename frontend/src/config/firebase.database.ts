@@ -11,15 +11,15 @@ import {
 } from "../constants";
 
 const firebaseConfig = {
-  apiKey: process.env[FIREBASE_CONFIG_KEYS.API_KEY] || "",
-  authDomain: process.env[FIREBASE_CONFIG_KEYS.AUTH_DOMAIN] || "",
-  databaseURL: process.env[FIREBASE_CONFIG_KEYS.DATABASE_URL] || "",
-  projectId: process.env[FIREBASE_CONFIG_KEYS.PROJECT_ID] || "",
-  storageBucket: process.env[FIREBASE_CONFIG_KEYS.STORAGE_BUCKET] || "",
+  apiKey: import.meta.env[FIREBASE_CONFIG_KEYS.API_KEY] || "",
+  authDomain: import.meta.env[FIREBASE_CONFIG_KEYS.AUTH_DOMAIN] || "",
+  databaseURL: import.meta.env[FIREBASE_CONFIG_KEYS.DATABASE_URL] || "",
+  projectId: import.meta.env[FIREBASE_CONFIG_KEYS.PROJECT_ID] || "",
+  storageBucket: import.meta.env[FIREBASE_CONFIG_KEYS.STORAGE_BUCKET] || "",
   messagingSenderId:
-    process.env[FIREBASE_CONFIG_KEYS.MESSAGING_SENDER_ID] || "",
-  appId: process.env[FIREBASE_CONFIG_KEYS.APP_ID] || "",
-  measurementId: process.env[FIREBASE_CONFIG_KEYS.MEASUREMENT_ID] || "",
+    import.meta.env[FIREBASE_CONFIG_KEYS.MESSAGING_SENDER_ID] || "",
+  appId: import.meta.env[FIREBASE_CONFIG_KEYS.APP_ID] || "",
+  measurementId: import.meta.env[FIREBASE_CONFIG_KEYS.MEASUREMENT_ID] || "",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -29,7 +29,7 @@ export const firestore = getFirestore(app);
 export const realtimeDb = getDatabase(app);
 export const analytics = getAnalytics(app);
 
-if (process.env.NODE_ENV === ENVIRONMENT.DEVELOPMENT) {
+if (import.meta.env.VITE_NODE_ENV === ENVIRONMENT.DEVELOPMENT) {
   try {
     connectAuthEmulator(auth, FIREBASE_EMULATOR_CONFIG.AUTH.URL);
     connectFirestoreEmulator(
