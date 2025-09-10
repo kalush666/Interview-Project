@@ -14,6 +14,10 @@ export const ERROR_MESSAGES = {
   REGISTRATION_FAILED: "Registration failed",
   LOGOUT_FAILED: "Logout failed",
   TOKEN_RETRIEVAL_FAILED: "Failed to retrieve authentication token",
+  FAILED_TO_CREATE_CLIENT: "Failed to create client",
+  FAILED_TO_GET_CLIENTS: "Failed to get clients",
+  FAILED_TO_UPDATE_CLIENT: "Failed to update client",
+  FAILED_TO_DELETE_CLIENT: "Failed to delete client",
 } as const;
 
 export const SUCCESS_MESSAGES = {
