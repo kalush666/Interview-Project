@@ -54,3 +54,35 @@ export const USER_STATES = {
   UNAUTHENTICATED: "unauthenticated",
   LOADING: "loading",
 } as const;
+
+export const UI_TEXT = {
+  CHAT_HEADER_TITLE: "Global Chat Room",
+  ERROR_PREFIX: "Error: ",
+  MESSAGES_COUNT: (count: number) => `${count} messages`,
+  MESSAGE_PLACEHOLDER: "Type your message...",
+  SEND_BUTTON_TEXT: "Send",
+} as const;
+
+export const CSS_CLASSES = {
+  CHAT_CONTAINER: "chat-container",
+  CHAT_HEADER: "chat-header",
+  CHAT_LOADING: "chat-loading",
+  CHAT_ERROR: "chat-error",
+  MESSAGES_CONTAINER: "messages-container",
+  MESSAGE: "message",
+  OWN_MESSAGE: "own-message",
+  OTHER_MESSAGE: "other-message",
+  MESSAGE_HEADER: "message-header",
+  USER_NAME: "user-name",
+  TIMESTAMP: "timestamp",
+  MESSAGE_CONTENT: "message-content",
+  MESSAGE_INPUT_FORM: "message-input-form",
+  MESSAGE_INPUT: "message-input",
+  SEND_BUTTON: "send-button",
+} as const;
+
+export const SCROLL_BEHAVIOR = {
+  SMOOTH: "smooth" as ScrollBehavior,
+  AUTO: "auto" as ScrollBehavior,
+  INSTANT: "instant" as ScrollBehavior,
+} as const;
