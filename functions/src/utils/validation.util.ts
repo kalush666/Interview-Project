@@ -10,12 +10,14 @@ export class ValidationUtils {
   }
 
   public static sanitizeString(value: any): string | undefined {
-    if (typeof value !== 'string') return undefined;
+    if (typeof value !== "string") return undefined;
     const trimmed = value.trim();
     return trimmed.length > 0 ? trimmed : undefined;
   }
 
-  public static removeUndefinedFields<T extends Record<string, any>>(obj: T): Partial<T> {
+  public static removeUndefinedFields<T extends Record<string, any>>(
+    obj: T
+  ): Partial<T> {
     const cleaned: Partial<T> = {};
     for (const [key, value] of Object.entries(obj)) {
       if (value !== undefined && value !== null) {
@@ -25,11 +27,22 @@ export class ValidationUtils {
     return cleaned;
   }
 
-  public static validateMessageLength(message: string, maxLength: number): boolean {
-    return Boolean(message && message.trim().length > 0 && message.length <= maxLength);
+  public static validateMessageLength(
+    message: string,
+    maxLength: number
+  ): boolean {
+    return Boolean(
+      message && message.trim().length > 0 && message.length <= maxLength
+    );
   }
 
-  public static validateNameLength(name: string, minLength: number, maxLength: number): boolean {
-    return Boolean(name && name.trim().length >= minLength && name.trim().length <= maxLength);
+  public static validateNameLength(
+    name: string,
+    minLength: number,
+    maxLength: number
+  ): boolean {
+    return Boolean(
+      name && name.trim().length >= minLength && name.trim().length <= maxLength
+    );
   }
 }
