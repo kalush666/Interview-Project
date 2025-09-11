@@ -1,7 +1,7 @@
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
-import { ChatService } from "../services/chat.service";
+import {ChatService} from "../services/chat.service";
 
 export function createApp() {
   const app = express();
@@ -9,9 +9,15 @@ export function createApp() {
 
   const corsOptions = {
     origin:
-      process.env.NODE_ENV === "production"
-        ? ["https://yourdomain.com", "https://www.yourdomain.com"]
-        : true,
+      process.env.NODE_ENV === "production" ?
+        [
+          "https://yourdomain.com", 
+          "https://www.yourdomain.com",
+          "http://localhost:5173",
+          "http://localhost:3000",
+          "http://localhost:4173"
+        ] :
+        true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -19,7 +25,7 @@ export function createApp() {
   app.use(cors(corsOptions));
 
   app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.urlencoded({extended: true}));
 
   const chatService = new ChatService();
   chatService.initializeDefaultRoom().catch(console.error);

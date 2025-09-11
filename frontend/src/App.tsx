@@ -12,7 +12,11 @@ import { ChatPage } from "./pages/ChatPage";
 import { ClientsPage } from "./pages/ClientsPage";
 import { ROUTES } from "./constants/api.constants";
 import { CSS_CLASSES, UI_TEXT } from "./constants";
+import { testFirebaseConfig } from "./debug/firebase-test";
 import "./App.css";
+
+// Run Firebase config test
+testFirebaseConfig();
 
 const App: React.FC = () => {
   const { user, loading } = useAuth();

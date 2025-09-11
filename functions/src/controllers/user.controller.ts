@@ -1,8 +1,8 @@
-import { Response } from "express";
-import { AuthRequest } from "../types/auth.types";
-import { UserService } from "../services/user.service";
-import { STATUS_MESSAGES } from "../constants";
-import { ValidationUtils } from "../utils/validation.util";
+import {Response} from "express";
+import {AuthRequest} from "../types/auth.types";
+import {UserService} from "../services/user.service";
+import {STATUS_MESSAGES} from "../constants";
+import {ValidationUtils} from "../utils/validation.util";
 import {
   CreateUserProfileDto,
   UpdateUserProfileDto,
@@ -18,7 +18,7 @@ export class UserController {
   ): Promise<void> => {
     try {
       const userId = req.user!.uid;
-      const dto: GetUserProfileDto = { uid: userId };
+      const dto: GetUserProfileDto = {uid: userId};
       const userProfile = await this.userService.getUserProfile(dto);
       if (!userProfile) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.NOT_FOUND).json({
@@ -29,7 +29,7 @@ export class UserController {
       }
       res
         .status(STATUS_MESSAGES.HTTP_STATUS.OK)
-        .json({ success: true, data: userProfile });
+        .json({success: true, data: userProfile});
     } catch (error) {
       res.status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
         success: false,
@@ -44,7 +44,7 @@ export class UserController {
   ): Promise<void> => {
     try {
       const userId = req.user!.uid;
-      const { email, displayName } = req.body;
+      const {email, displayName} = req.body;
 
       if (!email || !ValidationUtils.isValidEmail(email)) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.BAD_REQUEST).json({
@@ -65,7 +65,7 @@ export class UserController {
       const userProfile = await this.userService.createUserProfile(dto);
       res
         .status(STATUS_MESSAGES.HTTP_STATUS.CREATED)
-        .json({ success: true, data: userProfile });
+        .json({success: true, data: userProfile});
     } catch (error) {
       res.status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
         success: false,
@@ -80,7 +80,7 @@ export class UserController {
   ): Promise<void> => {
     try {
       const userId = req.user!.uid;
-      const { displayName } = req.body;
+      const {displayName} = req.body;
 
       const sanitizedDisplayName = ValidationUtils.sanitizeString(displayName);
 
@@ -99,7 +99,7 @@ export class UserController {
       }
       res
         .status(STATUS_MESSAGES.HTTP_STATUS.OK)
-        .json({ success: true, data: updatedProfile });
+        .json({success: true, data: updatedProfile});
     } catch (error) {
       res.status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
         success: false,

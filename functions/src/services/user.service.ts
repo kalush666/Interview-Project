@@ -1,7 +1,7 @@
-import { Firestore } from "firebase-admin/firestore";
-import { firebaseAdmin } from "../config/firebase";
-import { UserProfile } from "../types/user.types";
-import { FIRESTORE_COLLECTIONS } from "../constants/database.constants";
+import {Firestore} from "firebase-admin/firestore";
+import {firebaseAdmin} from "../config/firebase";
+import {UserProfile} from "../types/user.types";
+import {FIRESTORE_COLLECTIONS} from "../constants/database.constants";
 import {
   CreateUserProfileDto,
   UpdateUserProfileDto,
@@ -54,7 +54,7 @@ export class UserService {
       .collection(FIRESTORE_COLLECTIONS.USERS)
       .doc(dto.uid)
       .update(updatePayload);
-    return (await this.getUserProfile({ uid: dto.uid })) as UserProfile;
+    return (await this.getUserProfile({uid: dto.uid})) as UserProfile;
   }
 
   public async userProfileExists(uid: string): Promise<boolean> {

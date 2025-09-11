@@ -1,9 +1,9 @@
-import { Response } from "express";
-import { AuthRequest } from "../types/auth.types";
-import { ChatService } from "../services/chat.service";
-import { UserService } from "../services/user.service";
-import { STATUS_MESSAGES } from "../constants";
-import { CHAT_CONFIG } from "../constants/database.constants";
+import {Response} from "express";
+import {AuthRequest} from "../types/auth.types";
+import {ChatService} from "../services/chat.service";
+import {UserService} from "../services/user.service";
+import {STATUS_MESSAGES} from "../constants";
+import {CHAT_CONFIG} from "../constants/database.constants";
 import {
   SendMessageDto,
   GetMessagesDto,
@@ -11,7 +11,7 @@ import {
   GetRoomDto,
   GetUserProfileDto,
 } from "../dto";
-import { ValidationUtils } from "../utils/validation.util";
+import {ValidationUtils} from "../utils/validation.util";
 
 export class ChatController {
   private chatService = new ChatService();
@@ -22,7 +22,7 @@ export class ChatController {
     res: Response
   ): Promise<void> => {
     try {
-      const { message } = req.body;
+      const {message} = req.body;
       const userId = req.user!.uid;
 
       const sanitizedMessage = ValidationUtils.sanitizeString(message);
@@ -41,7 +41,7 @@ export class ChatController {
         });
         return;
       }
-      const userProfileDto: GetUserProfileDto = { uid: userId };
+      const userProfileDto: GetUserProfileDto = {uid: userId};
       const userProfile = await this.userService.getUserProfile(userProfileDto);
       const userDisplayName =
         userProfile?.displayName ||
@@ -72,10 +72,10 @@ export class ChatController {
     res: Response
   ): Promise<void> => {
     try {
-      const { limit, startAfter } = req.query;
-      const messageLimit = limit
-        ? parseInt(limit as string)
-        : CHAT_CONFIG.MAX_MESSAGES_PER_FETCH;
+      const {limit, startAfter} = req.query;
+      const messageLimit = limit ?
+        parseInt(limit as string) :
+        CHAT_CONFIG.MAX_MESSAGES_PER_FETCH;
       const getMessagesDto: GetMessagesDto = {
         limit: messageLimit,
         startAfter: startAfter as string,
@@ -115,7 +115,7 @@ export class ChatController {
     res: Response
   ): Promise<void> => {
     try {
-      const { name, description } = req.body;
+      const {name, description} = req.body;
       const createdBy = req.user!.uid;
 
       const sanitizedName = ValidationUtils.sanitizeString(name);
@@ -150,8 +150,8 @@ export class ChatController {
 
   public getRoom = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-      const { roomId } = req.params;
-      const getRoomDto: GetRoomDto = { roomId };
+      const {roomId} = req.params;
+      const getRoomDto: GetRoomDto = {roomId};
       const room = await this.chatService.getRoom(getRoomDto);
       if (!room) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.NOT_FOUND).json({
@@ -162,7 +162,7 @@ export class ChatController {
       }
       res
         .status(STATUS_MESSAGES.HTTP_STATUS.OK)
-        .json({ success: true, data: room });
+        .json({success: true, data: room});
     } catch (error) {
       res.status(STATUS_MESSAGES.HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
         success: false,

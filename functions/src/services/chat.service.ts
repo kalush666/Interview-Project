@@ -1,4 +1,4 @@
-import { firebaseAdmin } from "../config/firebase";
+import {firebaseAdmin} from "../config/firebase";
 import {
   ChatMessage,
   ChatRoom,

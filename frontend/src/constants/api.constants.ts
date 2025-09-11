@@ -1,11 +1,4 @@
-export const API_BASE_URL =
-  import.meta.env.VITE_NODE_ENV === "development"
-    ? `http://localhost:5001/${
-        import.meta.env.VITE_FIREBASE_PROJECT_ID || "demo-project"
-      }/us-central1/api`
-    : `https://us-central1-${
-        import.meta.env.VITE_FIREBASE_PROJECT_ID || "interview-project-c4b60"
-      }.cloudfunctions.net/api`;
+export const API_BASE_URL = "https://us-central1-interview-project-c4b60.cloudfunctions.net/api";
 
 export const API_ENDPOINTS = {
   USER_PROFILE: "/users/profile",

@@ -17,7 +17,7 @@ export const FIREBASE_EMULATOR_CONFIG = {
   },
   FIRESTORE: {
     HOST: "localhost",
-    PORT: 8080,
+    PORT: 8888,
   },
   DATABASE: {
     HOST: "localhost",

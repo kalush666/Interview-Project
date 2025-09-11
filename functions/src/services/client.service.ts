@@ -1,7 +1,7 @@
-import { Firestore } from "firebase-admin/firestore";
-import { firebaseAdmin } from "../config/firebase";
-import { Client } from "../types/client.types";
-import { FIRESTORE_COLLECTIONS } from "../constants/database.constants";
+import {Firestore} from "firebase-admin/firestore";
+import {firebaseAdmin} from "../config/firebase";
+import {Client} from "../types/client.types";
+import {FIRESTORE_COLLECTIONS} from "../constants/database.constants";
 import {
   CreateClientDto,
   UpdateClientDto,
@@ -74,9 +74,9 @@ export class ClientService {
       phone: dto.phone || prevData.phone,
       updatedAt: new Date(),
     };
-    const { id, ...fieldsToUpdate } = updatedClient;
+    const {id, ...fieldsToUpdate} = updatedClient;
     await clientRef.update(fieldsToUpdate);
-    return { ...updatedClient } as Client;
+    return {...updatedClient} as Client;
   }
 
   public async deleteClient(dto: DeleteClientDto): Promise<boolean> {

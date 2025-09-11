@@ -1,9 +1,9 @@
-import { Application } from "express";
-import { API_ENDPOINTS } from "../constants";
-import { authMiddleware } from "../middleware/auth.middleware";
-import { UserController } from "../controllers/user.controller";
-import { ClientController } from "../controllers/client.controller";
-import { ChatController } from "../controllers/chat.controller";
+import {Application} from "express";
+import {API_ENDPOINTS} from "../constants";
+import {authMiddleware} from "../middleware/auth.middleware";
+import {UserController} from "../controllers/user.controller";
+import {ClientController} from "../controllers/client.controller";
+import {ChatController} from "../controllers/chat.controller";
 
 export function registerRoutes(app: Application) {
   const userController = new UserController();

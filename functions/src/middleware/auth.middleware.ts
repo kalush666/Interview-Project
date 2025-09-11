@@ -1,8 +1,8 @@
-import { NextFunction, Response } from "express";
-import { AuthRequest } from "../types/auth.types";
-import { Auth, STATUS_MESSAGES } from "../constants";
-import { firebaseAdmin } from "../config/firebase";
-import { DecodedIdToken } from "firebase-admin/auth";
+import {NextFunction, Response} from "express";
+import {AuthRequest} from "../types/auth.types";
+import {Auth, STATUS_MESSAGES} from "../constants";
+import {firebaseAdmin} from "../config/firebase";
+import {DecodedIdToken} from "firebase-admin/auth";
 
 export const authMiddleware = async (
   req: AuthRequest,

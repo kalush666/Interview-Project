@@ -1,7 +1,7 @@
-import { Response } from "express";
-import { ClientService } from "../services/client.service";
-import { AuthRequest } from "../types/auth.types";
-import { STATUS_MESSAGES } from "../constants";
+import {Response} from "express";
+import {ClientService} from "../services/client.service";
+import {AuthRequest} from "../types/auth.types";
+import {STATUS_MESSAGES} from "../constants";
 import {
   CreateClientDto,
   GetClientDto,
@@ -9,7 +9,7 @@ import {
   UpdateClientDto,
   DeleteClientDto,
 } from "../dto";
-import { ValidationUtils } from "../utils/validation.util";
+import {ValidationUtils} from "../utils/validation.util";
 
 export class ClientController {
   private clientService: ClientService = new ClientService();
@@ -18,7 +18,7 @@ export class ClientController {
     req: AuthRequest,
     res: Response
   ): Promise<void> => {
-    const { name, phone, email } = req.body;
+    const {name, phone, email} = req.body;
     const ownerUid = req.user!.uid;
     try {
       const sanitizedName = ValidationUtils.sanitizeString(name);
@@ -51,7 +51,7 @@ export class ClientController {
   public getClient = async (req: AuthRequest, res: Response): Promise<void> => {
     const clientId = req.params.id;
     try {
-      const dto: GetClientDto = { clientId };
+      const dto: GetClientDto = {clientId};
       const client = await this.clientService.getClient(dto);
       if (!client) {
         res.status(STATUS_MESSAGES.HTTP_STATUS.NOT_FOUND).json({
@@ -80,7 +80,7 @@ export class ClientController {
   ): Promise<void> => {
     const ownerUid = req.user!.uid;
     try {
-      const dto: GetClientsByOwnerDto = { ownerUid };
+      const dto: GetClientsByOwnerDto = {ownerUid};
       const clients = await this.clientService.getClientsByOwner(dto);
       res.status(STATUS_MESSAGES.HTTP_STATUS.OK).json({
         message: STATUS_MESSAGES.HTTP_STATUS.OK,
@@ -102,7 +102,7 @@ export class ClientController {
   ): Promise<void> => {
     const clientId = req.params.id;
     const ownerUid = req.user!.uid;
-    const { name, phone, email } = req.body;
+    const {name, phone, email} = req.body;
     try {
       const sanitizedName = ValidationUtils.sanitizeString(name);
       const sanitizedPhone = ValidationUtils.sanitizeString(phone);

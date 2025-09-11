@@ -1,14 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { getDatabase, connectDatabaseEmulator } from "firebase/database";
-import { getAnalytics } from "firebase/analytics";
-import {
-  FIREBASE_CONFIG_KEYS,
-  FIREBASE_EMULATOR_CONFIG,
-  ENVIRONMENT,
-  ERROR_MESSAGES,
-} from "../constants";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
+import { getAnalytics, isSupported } from "firebase/analytics";
+import { FIREBASE_CONFIG_KEYS } from "../constants";
 
 const firebaseConfig = {
   apiKey: import.meta.env[FIREBASE_CONFIG_KEYS.API_KEY] || "",
@@ -27,24 +22,17 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const firestore = getFirestore(app);
 export const realtimeDb = getDatabase(app);
-export const analytics = getAnalytics(app);
 
-if (import.meta.env.VITE_NODE_ENV === ENVIRONMENT.DEVELOPMENT) {
-  try {
-    connectAuthEmulator(auth, FIREBASE_EMULATOR_CONFIG.AUTH.URL);
-    connectFirestoreEmulator(
-      firestore,
-      FIREBASE_EMULATOR_CONFIG.FIRESTORE.HOST,
-      FIREBASE_EMULATOR_CONFIG.FIRESTORE.PORT
-    );
-    connectDatabaseEmulator(
-      realtimeDb,
-      FIREBASE_EMULATOR_CONFIG.DATABASE.HOST,
-      FIREBASE_EMULATOR_CONFIG.DATABASE.PORT
-    );
-  } catch (error) {
-    console.warn(ERROR_MESSAGES.FIREBASE_EMULATOR_WARNING);
+let analytics: any = null;
+
+isSupported().then((supported) => {
+  if (supported) {
+    analytics = getAnalytics(app);
   }
-}
+});
+
+export { analytics };
+
+console.log("� Firebase connected to production services");
 
 export default app;
